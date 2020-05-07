@@ -34,6 +34,8 @@ public class TaskActivity extends AppCompatActivity {
         });
     }
 
+
+    // When activity is closed it will save changed task
     @Override
     protected void onPause() {
         super.onPause();

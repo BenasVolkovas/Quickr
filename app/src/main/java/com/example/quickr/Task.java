@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+// Single task will have id and content
 @Entity(tableName = "tasks")
 public class Task {
     @PrimaryKey

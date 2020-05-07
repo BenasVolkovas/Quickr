@@ -5,6 +5,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
+// Multiple sqlite queries for database
 @Dao
 public interface TaskDao {
     @Query("INSERT INTO tasks (content) VALUES ('New task')")

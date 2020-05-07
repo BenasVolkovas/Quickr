@@ -6,26 +6,31 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
+// Task Adapter represents single task
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder>{
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout containerView;
         public TextView titleTextView;
-
 
         public TaskViewHolder(View view) {
             super(view);
             this.containerView = view.findViewById(R.id.task_row);
             this.titleTextView = view.findViewById(R.id.task_row_title);
 
+            // When container is clicked it puts Extra to intent and starts Tasks Activity
             this.containerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -41,8 +46,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         }
     }
 
+
     private List<Task> tasks = new ArrayList<>();
 
+    @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -63,6 +70,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasks.size();
     }
 
+    // It gets everything from database and notifies that data has changed
     public void reload() {
         tasks = MainActivity.database.taskDao().getAll();
         notifyDataSetChanged();
