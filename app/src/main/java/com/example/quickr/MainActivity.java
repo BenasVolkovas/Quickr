@@ -2,7 +2,6 @@ package com.example.quickr;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -11,30 +10,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 // Main Activity is where all tasks will be presented
+// This activity is shown first
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private TasksAdapter adapter;
-    public static TasksDatabase database;
+    public static TasksDatabase tasksDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Finds bottomNavigationView and sets listener
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_tasks);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                // If item is clicked, it starts activity
                 switch (menuItem.getItemId()) {
                     case R.id.action_tasks:
                         return true;
@@ -53,14 +54,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Creates database for tasks keeping
-        database = Room
+        // Builds tasksDatabase
+        tasksDatabase = Room
                 .databaseBuilder(getApplicationContext(), TasksDatabase.class, "tasks")
                 .allowMainThreadQueries()
                 .build();
 
 
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.tasks_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         adapter = new TasksAdapter();
 
@@ -70,13 +71,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // Creates floating action button for adding tasks
+        // Creates button for adding new tasks
         FloatingActionButton fab = findViewById(R.id.add_task_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                database.taskDao().create();
+                tasksDatabase.taskDao().create();
                 adapter.reload();
+
             }
         });
     }

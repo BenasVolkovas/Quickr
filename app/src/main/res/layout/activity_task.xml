@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/single_task_container"
     tools:context=".TaskActivity">
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inputType="text"
-        android:id="@+id/task_edit_text"
+        android:id="@+id/task_text"
         android:gravity="top"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         android:background="@android:color/transparent"
-        android:padding="10dp" />
+        android:padding="20sp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delete_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:tint="@color/cardview_light_background"
-        app:srcCompat="@android:drawable/ic_input_delete" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16sp"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/ic_trash_can" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save_task_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16sp"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/ic_save_text" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

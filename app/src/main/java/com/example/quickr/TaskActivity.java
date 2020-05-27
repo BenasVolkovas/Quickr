@@ -1,47 +1,89 @@
 package com.example.quickr;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class TaskActivity extends AppCompatActivity {
-    private EditText editText;
+public class TaskActivity extends AppCompatActivity implements AddTaskDialog.TaskDialogListener {
+    private CoordinatorLayout containerView;
+    private TextView textView;
     private int id;
+    private String content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        // Gets extras from intent
         Intent getIntent = getIntent();
-        editText = findViewById(R.id.task_edit_text);
-        editText.setText(getIntent.getStringExtra("content"));
+        textView = findViewById(R.id.task_text);
+        content = getIntent.getStringExtra("content");
+        textView.setText(content);
         id = getIntent.getIntExtra("id", 0);
 
-        FloatingActionButton fab = findViewById(R.id.delete_task_button);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // Creates button for deleting tasks
+        FloatingActionButton fabd = findViewById(R.id.delete_task_button);
+        fabd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.database.taskDao().delete(id);
+                MainActivity.tasksDatabase.taskDao().delete(id);
 
+                // Returns to previous activity
                 finish();
             }
         });
+
+        // Creates button for saving tasks
+        FloatingActionButton fabs = findViewById(R.id.save_task_button);
+        fabs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Saving is done when TaskActivity is closed, so it needs to just return to MainActivity
+                finish();
+            }
+        });
+
+        // Finds containerView
+        // If view is clicked it opens dialog
+        containerView = findViewById(R.id.single_task_container);
+        containerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
+
     }
 
+    // Creates and shows dialog
+    public void openDialog() {
+        AddTaskDialog addTaskDialog = new AddTaskDialog();
+        addTaskDialog.show(getSupportFragmentManager(), "task dialog");
+    }
 
-    // When activity is closed it will save changed task
+    // Sets text to text, which was written in dialog
+    @Override
+    public void applyTask(String text) {
+        textView.setText(text);
+    }
+
+    // When activity is closed it saves changed task
     @Override
     protected void onPause() {
         super.onPause();
 
+        // Saves task
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
-        MainActivity.database.taskDao().save(editText.getText().toString(), id);
+        MainActivity.tasksDatabase.taskDao().save(textView.getText().toString(), id);
     }
 }

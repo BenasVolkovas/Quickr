@@ -2,11 +2,11 @@ package com.example.quickr;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -18,24 +18,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-// Task Adapter represents single task
-public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder>{
+// TasksAdapter represents single task
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout containerView;
-        public TextView titleTextView;
+        private LinearLayout containerView;
+        private TextView titleTextView;
+        private CheckBox checkBox;
+        public int id;
 
         public TaskViewHolder(View view) {
             super(view);
             this.containerView = view.findViewById(R.id.task_row);
             this.titleTextView = view.findViewById(R.id.task_row_title);
+            this.checkBox = view.findViewById(R.id.task_checkbox);
 
-            // When container is clicked it puts Extra to intent and starts Tasks Activity
+            // When container is clicked it puts Extra to intent and starts TasksActivity
             this.containerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Context context = v.getContext();
                     Task task = (Task) containerView.getTag();
+                    Context context = v.getContext();
                     Intent intent = new Intent(v.getContext(), TaskActivity.class);
                     intent.putExtra("id", task.id);
                     intent.putExtra("content", task.content);
@@ -43,12 +46,25 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
                     context.startActivity(intent);
                 }
             });
+
+            // When checkbox is clicked it deletes task and reloads MainActivity
+            this.checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Task task = (Task) checkBox.getTag();
+                    Context context = buttonView.getContext();
+                    Intent intent = new Intent(buttonView.getContext(), MainActivity.class);
+                    MainActivity.tasksDatabase.taskDao().delete(task.id);
+
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
-
+    // Creates list for tasks
     private List<Task> tasks = new ArrayList<>();
 
+    // While view is creating it converts xml to java code
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,21 +74,30 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return new TaskViewHolder(view);
     }
 
+    // When view is created
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
+
+        // Gets current task
         Task current = tasks.get(position);
+
+        // Sets tags to current view
         holder.containerView.setTag(current);
+        holder.checkBox.setTag(current);
+
+        // Sets text to current info saved in database
         holder.titleTextView.setText(current.content);
     }
 
+    // Returns size of tasks
     @Override
     public int getItemCount() {
         return tasks.size();
     }
 
-    // It gets everything from database and notifies that data has changed
+    // Gets all info from database and notifies that data has changed
     public void reload() {
-        tasks = MainActivity.database.taskDao().getAll();
+        tasks = MainActivity.tasksDatabase.taskDao().getAll();
         notifyDataSetChanged();
     }
 }
