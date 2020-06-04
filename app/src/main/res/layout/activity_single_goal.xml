@@ -5,20 +5,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/single_task_container"
-    tools:context=".TaskActivity">
+    android:id="@+id/single_goal_container"
+    tools:context=".SingleGoalActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/task_text"
-        android:gravity="top"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:padding="20sp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/goal_text"
+            android:gravity="top"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:padding="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:id="@+id/goal_time"
+            android:gravity="center|top"
+            android:textSize="40sp"
+            android:textColor="@color/black"
+            android:paddingTop="50sp"
+            android:background="#EEEEEE"/>
+
+    </LinearLayout>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/delete_task_button"
+        android:id="@+id/delete_goal_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -27,7 +48,7 @@
         app:srcCompat="@drawable/ic_trash_can" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_task_button"
+        android:id="@+id/save_goal_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"

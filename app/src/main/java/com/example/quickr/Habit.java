@@ -13,7 +13,4 @@ public class Habit {
 
     @ColumnInfo(name = "content")
     public String content;
-
-//    @ColumnInfo(name = "streak")
-//    public String streak;
 }
