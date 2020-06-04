@@ -69,7 +69,12 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
 
     // Gets all info from habits list and notifies that data has changed
     public void reload() {
-        habits = HabitsActivity.habitsDatabase.habitDao().getAll();
+        try {
+            habits = HabitsActivity.habitsDatabase.habitDao().getAll();
+        } catch (Exception error) {
+            System.out.println("DB ERROR CATCH THAT PREVENTS CRASH ");
+            System.out.println(error.toString());
+        }
         notifyDataSetChanged();
     }
 }

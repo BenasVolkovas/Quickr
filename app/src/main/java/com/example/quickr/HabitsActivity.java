@@ -54,10 +54,11 @@ public class HabitsActivity extends AppCompatActivity{
         });
 
         // Builds habitsDatabase
-        habitsDatabase = Room
-                .databaseBuilder(getApplicationContext(), HabitsDatabase.class, "habits")
-                .allowMainThreadQueries()
-                .build();
+        habitsDatabase = HabitsDatabase.getAppDatabase(getApplicationContext());
+//        habitsDatabase = Room
+//                .databaseBuilder(getApplicationContext(), HabitsDatabase.class, "habits")
+//                .allowMainThreadQueries()
+//                .build();
 
         recyclerView = findViewById(R.id.habits_recycler_view);
         layoutManager = new LinearLayoutManager(this);
