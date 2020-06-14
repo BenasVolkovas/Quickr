@@ -15,7 +15,25 @@ public interface HabitDao {
     List<Habit> getAll();
 
     @Query("UPDATE habits SET content = :content WHERE id = :id")
-    void save(String content, int id);
+    void saveText(String content, int id);
+
+    @Query("UPDATE habits SET streak = streak+1 WHERE id = :id")
+    void updateStreak(int id);
+
+    @Query("UPDATE habits SET streak = streak-1 WHERE id = :id")
+    void removeStreak(int id);
+
+    @Query("SELECT streak FROM habits WHERE id = :id")
+    int getStreak(int id);
+
+    @Query("UPDATE habits SET checked = 1 WHERE id = :id")
+    void isChecked(int id);
+
+    @Query("UPDATE habits SET checked = 0 WHERE id = :id")
+    void notChecked(int id);
+
+    @Query("SELECT checked FROM habits WHERE id = :id")
+    int getCheckInfo(int id);
 
     @Query("DELETE FROM habits WHERE id = :id")
     void delete(int id);

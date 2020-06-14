@@ -1,16 +1,25 @@
 package com.example.quickr;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.muddzdev.styleabletoast.StyleableToast;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 // HabitsAdapter represents single task
@@ -22,18 +31,89 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         private CheckBox checkBox;
         private TextView streakNum;
         public int id;
+        public int isChecked = 0;
 
         public HabitViewHolder(View view) {
             super(view);
-            this.containerView = view.findViewById(R.id.task_row);
+            this.containerView = view.findViewById(R.id.habit_row);
             this.textView = view.findViewById(R.id.habit_text);
             this.checkBox = view.findViewById(R.id.habit_checkbox);
             this.streakNum = view.findViewById(R.id.habit_streak);
+
+            this.containerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Habit habit = (Habit) containerView.getTag();
+                    Context context = v.getContext();
+                    Intent intent = new Intent(v.getContext(), SingleHabitActivity.class);
+                    intent.putExtra("id", habit.id);
+                    intent.putExtra("content", habit.content);
+                    intent.putExtra("streak", habit.streak);
+
+                    context.startActivity(intent);
+                }
+            });
+
+            this.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Habit habit = (Habit) checkBox.getTag();
+                    int streak = HabitsActivity.habitsDatabase.habitDao().getStreak(habit.id);
+
+                    isChecked = HabitsActivity.habitsDatabase.habitDao().getCheckInfo(habit.id);
+
+                    if (isChecked == 0) {
+                        isChecked = 1;
+
+                        try {
+                            Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
+                            if (cursor.getCount() == 0) {
+                                MainActivity.scoresDatabase.scoreDao().create();
+                                MainActivity.scoresDatabase.scoreDao().updatePoints((streak+1)*100);
+                            } else {
+                                MainActivity.scoresDatabase.scoreDao().updatePoints((streak+1)*100);
+                            }
+                        } catch (NullPointerException e) {
+
+                        }
+
+
+                        HabitsActivity.habitsDatabase.habitDao().isChecked(habit.id);
+                        HabitsActivity.habitsDatabase.habitDao().updateStreak(habit.id);
+                        StyleableToast.makeText(v.getContext(), "You got " + String.valueOf((streak+1)*100) +" points", R.style.taskToast).show();
+                    } else if (isChecked == 1) {
+                        isChecked = 0;
+                        MainActivity.scoresDatabase.scoreDao().removePoints(streak*100);
+                        HabitsActivity.habitsDatabase.habitDao().removeStreak(habit.id);
+                        HabitsActivity.habitsDatabase.habitDao().notChecked(habit.id);
+                    }
+
+                    streak = HabitsActivity.habitsDatabase.habitDao().getStreak(habit.id);
+                    streakNum.setText(String.valueOf(streak));
+                }
+            });
         }
     }
 
     // Creates list for habits
     private List<Habit> habits = new ArrayList<>();
+
+    public String getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+
+        List<String> times = Arrays.asList(currentDate.split("/"));
+
+        int currentDay = Integer.parseInt(times.get(1));
+        int currentMonth = Integer.parseInt(times.get(0));
+        int currentYear = Integer.parseInt(times.get(2)) + 2000;
+
+        String date = currentYear + " / " + currentMonth + " / " + currentDay;
+
+        System.out.println("111111" + date);
+        return date;
+    }
 
     // While view is creating it converts xml to java code
     @NonNull
@@ -58,7 +138,11 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         // Sets text to current info saved in database
         // Streak number is hard-coded, because it is not in database
         holder.textView.setText(current.content);
-        holder.streakNum.setText("999");
+        holder.streakNum.setText(String.valueOf(current.streak));
+
+        if (HabitsActivity.habitsDatabase.habitDao().getCheckInfo(current.id) == 1) {
+            holder.checkBox.setChecked(true);
+        }
     }
 
     // Returns size of habits
@@ -69,7 +153,12 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
 
     // Gets all info from habits list and notifies that data has changed
     public void reload() {
-        habits = HabitsActivity.habitsDatabase.habitDao().getAll();
+        try {
+            habits = HabitsActivity.habitsDatabase.habitDao().getAll();
+        } catch (Exception error) {
+            System.out.println("DB ERROR CATCH THAT PREVENTS CRASH");
+            System.out.println(error.toString());
+        }
         notifyDataSetChanged();
     }
 }

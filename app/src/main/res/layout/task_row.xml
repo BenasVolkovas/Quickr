@@ -10,11 +10,13 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:padding="10dp">
 
-    <CheckBox android:id="@+id/task_checkbox"
+    <CheckBox
+        android:id="@+id/task_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center|start"
-        android:layout_marginEnd="10sp" />
+        android:layout_marginEnd="10sp"
+        android:onClick="showToast"/>
 
     <TextView
         android:id="@+id/task_row_title"

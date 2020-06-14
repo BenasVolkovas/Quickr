@@ -8,4 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    
+    <style name="taskToast">
+        <item name="stColorBackground">#64FF64</item>
+        <item name="stTextColor">#000000</item>
+        <item name="stTextSize">20sp</item>
+        <item name="stIconStart">@drawable/ic_done</item>
+        <item name="stStrokeColor">#000000</item>
+        <item name="stStrokeWidth">2sp</item>
+        <item name="stLength">LONG</item>
+        <item name="stRadius">50sp</item>
+    </style>
+
 </resources>

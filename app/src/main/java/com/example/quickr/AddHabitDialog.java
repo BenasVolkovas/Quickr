@@ -13,26 +13,24 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class AddGoalDialog extends AppCompatDialogFragment {
+public class AddHabitDialog extends AppCompatDialogFragment {
     private EditText editTextTask;
-    private GoalDialogListener listener;
+    private HabitDialogListener listener;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
         // Creates empty AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Converts xml file to java code
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_goal_dialog, null);
+        View view = inflater.inflate(R.layout.new_habit_dialog, null);
 
-        editTextTask = view.findViewById(R.id.goal_dialog);
+        editTextTask = view.findViewById(R.id.habit_dialog);
 
-        // Sets dialog to listen, which button is pressed
         builder.setView(view)
-                .setTitle("Goal")
+                .setTitle("Habit")
                 // If cancel, nothing happens
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -44,28 +42,26 @@ public class AddGoalDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String goalText = editTextTask.getText().toString();
-                        listener.applyTask(goalText);
+                        String habitText = editTextTask.getText().toString();
+                        listener.applyTask(habitText);
                     }
                 });
 
         // Returns created dialog
         return builder.create();
     }
-
     // Attaches context to listener
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         try {
-            listener = (GoalDialogListener) context;
+            listener = (HabitDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "Must implement GoalDialogListener");
+            throw new ClassCastException(context.toString() + "Must implement HabitDialogListener");
         }
     }
-
-    public interface GoalDialogListener {
+    public interface HabitDialogListener {
         void applyTask(String text);
     }
 }

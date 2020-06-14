@@ -2,6 +2,7 @@ package com.example.quickr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,18 @@ public class GoalsAdapter extends RecyclerView.Adapter<GoalsAdapter.GoalViewHold
                     Context context = buttonView.getContext();
                     Intent intent = new Intent(buttonView.getContext(), GoalsActivity.class);
                     GoalsActivity.goalsDatabase.goalDao().delete(goal.id);
+
+                    try {
+                        Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
+                        if (cursor.getCount() == 0) {
+                            MainActivity.scoresDatabase.scoreDao().create();
+                            MainActivity.scoresDatabase.scoreDao().updatePoints(200);
+                        } else {
+                            MainActivity.scoresDatabase.scoreDao().updatePoints(200);
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
 
                     context.startActivity(intent);
                 }

@@ -9,11 +9,14 @@ import androidx.room.Room;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.muddzdev.styleabletoast.StyleableToast;
 
 // HabitsActivity contains all habits in recycler view
 public class HabitsActivity extends AppCompatActivity{
@@ -54,10 +57,7 @@ public class HabitsActivity extends AppCompatActivity{
         });
 
         // Builds habitsDatabase
-        habitsDatabase = Room
-                .databaseBuilder(getApplicationContext(), HabitsDatabase.class, "habits")
-                .allowMainThreadQueries()
-                .build();
+        habitsDatabase = HabitsDatabase.getAppDatabase(getApplicationContext());
 
         recyclerView = findViewById(R.id.habits_recycler_view);
         layoutManager = new LinearLayoutManager(this);
@@ -76,6 +76,29 @@ public class HabitsActivity extends AppCompatActivity{
                 adapter.reload();
             }
         });
+    }
+
+//    public void showToast(View v) {
+//        StyleableToast.makeText(this, "You got 100 points", R.style.taskToast).show();
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tool_bar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.score) {
+            startActivity(new Intent(getApplicationContext(), ScoreActivity.class));
+            overridePendingTransition(0, 0);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     // When brought to foreground reloads data
