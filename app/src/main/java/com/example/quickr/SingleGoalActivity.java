@@ -31,15 +31,14 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_goal);
 
-        // Gets extras from intent
         Intent getIntent = getIntent();
         textView = findViewById(R.id.goal_text);
         timeView = findViewById(R.id.goal_time);
 
+        // Gets extras from intent
         content = getIntent.getStringExtra("content");
         id = getIntent.getIntExtra("id", 0);
         time = getIntent.getStringExtra("time");
-        currentDate = getCurrentDate();
 
         textView.setText(content);
         timeView.setText("Achieve until\n" + time);
@@ -53,6 +52,7 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
 
                 // Returns to previous activity
                 finish();
+                overridePendingTransition(0,0);
             }
         });
 
@@ -65,6 +65,7 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
                 Context context = view.getContext();
                 Intent intent = new Intent(view.getContext(), GoalsActivity.class);
                 context.startActivity(intent);
+                overridePendingTransition(0,0);
             }
         });
 
@@ -88,6 +89,7 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
                 intent.putExtra("time", time);
 
                 context.startActivity(intent);
+                overridePendingTransition(0,0);
             }
         });
     }
@@ -100,24 +102,24 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
 
     // Sets text to text, which was written in dialog and sets new content value
     @Override
-    public void applyTask(String text) {
+    public void applyGoal(String text) {
         textView.setText(text);
         content = textView.getText().toString();
     }
 
-    public String getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
-
-        List<String> times = Arrays.asList(currentDate.split("/"));
-
-        int currentDay = Integer.parseInt(times.get(1));
-        int currentMonth = Integer.parseInt(times.get(0));
-        int currentYear = Integer.parseInt(times.get(2)) + 2000;
-        String date = currentYear + " / " + currentMonth + " / " + currentDay;
-
-        return date;
-    }
+//    public String getCurrentDate() {
+//        Calendar calendar = Calendar.getInstance();
+//        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+//
+//        List<String> times = Arrays.asList(currentDate.split("/"));
+//
+//        int currentDay = Integer.parseInt(times.get(1));
+//        int currentMonth = Integer.parseInt(times.get(0));
+//        int currentYear = Integer.parseInt(times.get(2)) + 2000;
+//        String date = currentYear + " / " + currentMonth + " / " + currentDay;
+//
+//        return date;
+//    }
 
     // When activity is closed it saves changed goal
     @Override

@@ -23,18 +23,19 @@ public class SingleHabitActivity extends AppCompatActivity implements AddHabitDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_habit);
 
-        // Gets extras from intent
         Intent getIntent = getIntent();
         textView = findViewById(R.id.habit_text);
         streakView = findViewById(R.id.habit_streak);
 
+        // Gets extras from intent
         content = getIntent.getStringExtra("content");
         id = getIntent.getIntExtra("id", 0);
-        streak = getIntent.getIntExtra("streak", 0);
+        streak = HabitsActivity.habitsDatabase.habitDao().getStreak(id);
 
         textView.setText(content);
         streakView.setText("Current streak:\n" + streak);
 
+        // Deletes habit
         FloatingActionButton fabd = findViewById(R.id.delete_habit_button);
         fabd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,8 +44,11 @@ public class SingleHabitActivity extends AppCompatActivity implements AddHabitDi
 
                 // Returns to previous activity
                 finish();
+                overridePendingTransition(0,0);
             }
         });
+
+        // Starts Habits Activity
         FloatingActionButton fabs = findViewById(R.id.save_habit_button);
         fabs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,8 +57,11 @@ public class SingleHabitActivity extends AppCompatActivity implements AddHabitDi
                 Context context = view.getContext();
                 Intent intent = new Intent(view.getContext(), HabitsActivity.class);
                 context.startActivity(intent);
+                overridePendingTransition(0,0);
             }
         });
+
+        // Opens dialog
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,13 +70,15 @@ public class SingleHabitActivity extends AppCompatActivity implements AddHabitDi
         });
     }
 
+    // Creates and shows dialog
     public void openDialog() {
         AddHabitDialog addHabitDialog = new AddHabitDialog();
         addHabitDialog.show(getSupportFragmentManager(), "habit dialog");
     }
 
+    // Applies text
     @Override
-    public void applyTask(String text) {
+    public void applyHabit(String text) {
         textView.setText(text);
     }
 

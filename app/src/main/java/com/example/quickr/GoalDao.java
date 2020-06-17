@@ -20,9 +20,6 @@ public interface GoalDao {
     @Query("UPDATE goals SET time = :time WHERE id = :id")
     void saveDate(String time, int id);
 
-//    @Query("UPDATE goals SET time = :time AND content = :content WHERE id = :id")
-//    void save(String time, String content, int id);
-
     @Query("DELETE FROM goals WHERE id = :id")
     void delete(int id);
 }

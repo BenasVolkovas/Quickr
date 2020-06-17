@@ -25,6 +25,7 @@ public class HabitsActivity extends AppCompatActivity{
     private RecyclerView.LayoutManager layoutManager;
     private HabitsAdapter adapter;
     public static HabitsDatabase habitsDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +79,7 @@ public class HabitsActivity extends AppCompatActivity{
         });
     }
 
-//    public void showToast(View v) {
-//        StyleableToast.makeText(this, "You got 100 points", R.style.taskToast).show();
-//    }
-
+    // Creates oprions menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -89,6 +87,7 @@ public class HabitsActivity extends AppCompatActivity{
         return true;
     }
 
+    // If clicked it opens Score Activity
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();

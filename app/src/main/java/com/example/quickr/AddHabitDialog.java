@@ -20,6 +20,7 @@ public class AddHabitDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
         // Creates empty AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -43,7 +44,7 @@ public class AddHabitDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String habitText = editTextTask.getText().toString();
-                        listener.applyTask(habitText);
+                        listener.applyHabit(habitText);
                     }
                 });
 
@@ -61,7 +62,9 @@ public class AddHabitDialog extends AppCompatDialogFragment {
             throw new ClassCastException(context.toString() + "Must implement HabitDialogListener");
         }
     }
+
+    // Gets text
     public interface HabitDialogListener {
-        void applyTask(String text);
+        void applyHabit(String text);
     }
 }

@@ -40,6 +40,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
             this.checkBox = view.findViewById(R.id.habit_checkbox);
             this.streakNum = view.findViewById(R.id.habit_streak);
 
+            // When clicked opens Single Habit Activity
             this.containerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -50,7 +51,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
                     intent.putExtra("content", habit.content);
                     intent.putExtra("streak", habit.streak);
 
-                    context.startActivity(intent);
+                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
 
@@ -58,14 +59,15 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
                 @Override
                 public void onClick(View v) {
 
+                    // Gets habit tag, streak, checked info
                     Habit habit = (Habit) checkBox.getTag();
                     int streak = HabitsActivity.habitsDatabase.habitDao().getStreak(habit.id);
-
                     isChecked = HabitsActivity.habitsDatabase.habitDao().getCheckInfo(habit.id);
 
                     if (isChecked == 0) {
                         isChecked = 1;
 
+                        // If scores DB is empty it creates one column
                         try {
                             Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
                             if (cursor.getCount() == 0) {
@@ -78,17 +80,20 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
 
                         }
 
-
+                        // Updates checked, streak info, shows toast
                         HabitsActivity.habitsDatabase.habitDao().isChecked(habit.id);
                         HabitsActivity.habitsDatabase.habitDao().updateStreak(habit.id);
-                        StyleableToast.makeText(v.getContext(), "You got " + String.valueOf((streak+1)*100) +" points", R.style.taskToast).show();
+                        StyleableToast.makeText(v.getContext(), "You got " + (streak+1)*100 +" points", R.style.toast).show();
                     } else if (isChecked == 1) {
                         isChecked = 0;
+
+                        // Removes points, streak and makes unchecked
                         MainActivity.scoresDatabase.scoreDao().removePoints(streak*100);
                         HabitsActivity.habitsDatabase.habitDao().removeStreak(habit.id);
                         HabitsActivity.habitsDatabase.habitDao().notChecked(habit.id);
                     }
 
+                    // Gets current streak and sets text
                     streak = HabitsActivity.habitsDatabase.habitDao().getStreak(habit.id);
                     streakNum.setText(String.valueOf(streak));
                 }
@@ -99,21 +104,21 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
     // Creates list for habits
     private List<Habit> habits = new ArrayList<>();
 
-    public String getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
-
-        List<String> times = Arrays.asList(currentDate.split("/"));
-
-        int currentDay = Integer.parseInt(times.get(1));
-        int currentMonth = Integer.parseInt(times.get(0));
-        int currentYear = Integer.parseInt(times.get(2)) + 2000;
-
-        String date = currentYear + " / " + currentMonth + " / " + currentDay;
-
-        System.out.println("111111" + date);
-        return date;
-    }
+//    public String getCurrentDate() {
+//        Calendar calendar = Calendar.getInstance();
+//        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+//
+//        List<String> times = Arrays.asList(currentDate.split("/"));
+//
+//        int currentDay = Integer.parseInt(times.get(1));
+//        int currentMonth = Integer.parseInt(times.get(0));
+//        int currentYear = Integer.parseInt(times.get(2)) + 2000;
+//
+//        String date = currentYear + " / " + currentMonth + " / " + currentDay;
+//
+//        System.out.println("111111" + date);
+//        return date;
+//    }
 
     // While view is creating it converts xml to java code
     @NonNull
@@ -136,12 +141,14 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         holder.checkBox.setTag(current);
 
         // Sets text to current info saved in database
-        // Streak number is hard-coded, because it is not in database
         holder.textView.setText(current.content);
         holder.streakNum.setText(String.valueOf(current.streak));
 
+        // On create, if it was checked, makes checked, else unchecked
         if (HabitsActivity.habitsDatabase.habitDao().getCheckInfo(current.id) == 1) {
             holder.checkBox.setChecked(true);
+        } else {
+            holder.checkBox.setChecked(false);
         }
     }
 

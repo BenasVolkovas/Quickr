@@ -21,6 +21,7 @@ public class ScoreActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.score_text);
 
+        // If DB is not created then shows 0
         try {
             score = MainActivity.scoresDatabase.scoreDao().getAll().points;
         } catch (NullPointerException e) {
@@ -29,11 +30,13 @@ public class ScoreActivity extends AppCompatActivity {
 
         textView.setText(String.valueOf(score));
 
+        // Returns to previous Activity
         FloatingActionButton fab = findViewById(R.id.return_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+                overridePendingTransition(0,0);
             }
         });
     }

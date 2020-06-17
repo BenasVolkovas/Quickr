@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showToast(View v) {
-        StyleableToast taskToast = StyleableToast.makeText(this, "You got 100 points", R.style.taskToast);
+        StyleableToast taskToast = StyleableToast.makeText(this, "You got 100 points", R.style.toast);
         taskToast.show();
     }
 

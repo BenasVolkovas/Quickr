@@ -38,6 +38,7 @@ public class TaskActivity extends AppCompatActivity implements AddTaskDialog.Tas
 
                 // Returns to previous activity
                 finish();
+                overridePendingTransition(0,0);
             }
         });
 
@@ -49,6 +50,7 @@ public class TaskActivity extends AppCompatActivity implements AddTaskDialog.Tas
 
                 // Saving is done when TaskActivity is closed, so it needs to just return to MainActivity
                 finish();
+                overridePendingTransition(0,0);
             }
         });
 

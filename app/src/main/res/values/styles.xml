@@ -13,7 +13,7 @@
         <item name="windowNoTitle">true</item>
     </style>
     
-    <style name="taskToast">
+    <style name="toast">
         <item name="stColorBackground">#64FF64</item>
         <item name="stTextColor">#000000</item>
         <item name="stTextSize">20sp</item>

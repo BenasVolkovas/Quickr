@@ -45,7 +45,7 @@ public class AddGoalDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String goalText = editTextTask.getText().toString();
-                        listener.applyTask(goalText);
+                        listener.applyGoal(goalText);
                     }
                 });
 
@@ -65,7 +65,8 @@ public class AddGoalDialog extends AppCompatDialogFragment {
         }
     }
 
+    // Gets text
     public interface GoalDialogListener {
-        void applyTask(String text);
+        void applyGoal(String text);
     }
 }

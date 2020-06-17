@@ -67,6 +67,7 @@ public class AddTaskDialog extends AppCompatDialogFragment {
         }
     }
 
+    // Gets text
     public interface TaskDialogListener {
         void applyTask(String text);
     }

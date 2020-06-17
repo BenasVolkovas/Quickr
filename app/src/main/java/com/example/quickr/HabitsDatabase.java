@@ -17,6 +17,7 @@ public abstract class HabitsDatabase extends RoomDatabase {
 
     public abstract HabitDao habitDao();
 
+    // Builds DB with migrations
     public static HabitsDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(), HabitsDatabase.class, "habits")
@@ -31,12 +32,14 @@ public abstract class HabitsDatabase extends RoomDatabase {
         INSTANCE = null;
     }
 
+    // Migrations
     static final Migration migration1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE habits ADD COLUMN streak INTEGER NOT NULL DEFAULT 0");
         }
     };
+
     static final Migration migration2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {

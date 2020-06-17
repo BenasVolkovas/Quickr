@@ -87,11 +87,13 @@ public class GoalsActivity extends AppCompatActivity {
         });
     }
 
+    // When checkbox is clicked it shows toast
     public void showToast(View v) {
-        StyleableToast taskToast = StyleableToast.makeText(this, "You got 200 points", R.style.taskToast);
-        taskToast.show();
+        StyleableToast goalToast = StyleableToast.makeText(this, "You got 200 points", R.style.toast);
+        goalToast.show();
     }
 
+    // Creates options menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -99,6 +101,7 @@ public class GoalsActivity extends AppCompatActivity {
         return true;
     }
 
+    // When item is clicked it opens Score Activity
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();

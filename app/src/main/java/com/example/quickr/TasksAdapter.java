@@ -44,7 +44,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
                     intent.putExtra("id", task.id);
                     intent.putExtra("content", task.content);
 
-                    context.startActivity(intent);
+                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
 
@@ -68,7 +68,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
                     }
 
-                    context.startActivity(intent);
+                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
         }
