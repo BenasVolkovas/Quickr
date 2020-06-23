@@ -3,6 +3,7 @@ package com.example.quickr;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         public CheckBox checkBox;
         public int id;
 
+        // Constructor
         public TaskViewHolder(View view) {
             super(view);
             this.containerView = view.findViewById(R.id.task_row);
@@ -51,24 +53,40 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             // When checkbox is clicked it deletes task and reloads MainActivity
             this.checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Task task = (Task) checkBox.getTag();
-                    Context context = buttonView.getContext();
-                    Intent intent = new Intent(buttonView.getContext(), MainActivity.class);
-                    MainActivity.tasksDatabase.taskDao().delete(task.id);
 
-                    try {
-                        Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
-                        if (cursor.getCount() == 0) {
-                            MainActivity.scoresDatabase.scoreDao().create();
-                            MainActivity.scoresDatabase.scoreDao().updatePoints(100);
-                        } else {
-                            MainActivity.scoresDatabase.scoreDao().updatePoints(100);
+                    final CompoundButton buttonViewFinal = buttonView;
+
+                    // Creates handler for adding delay
+                    Handler handler = new Handler();
+
+                    // Method with delay
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            // Deletes task by finding tag
+                            Task task = (Task) checkBox.getTag();
+                            Context context = buttonViewFinal.getContext();
+                            Intent intent = new Intent(buttonViewFinal.getContext(), MainActivity.class);
+                            MainActivity.tasksDatabase.taskDao().delete(task.id);
+
+                            // If scores DB is empty it creates one column
+                            try {
+                                Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
+                                if (cursor.getCount() == 0) {
+                                    MainActivity.scoresDatabase.scoreDao().create();
+                                    MainActivity.scoresDatabase.scoreDao().updatePoints(100);
+                                } else {
+                                    MainActivity.scoresDatabase.scoreDao().updatePoints(100);
+                                }
+                            } catch (NullPointerException e) {
+
+                            }
+
+                            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                         }
-                    } catch (NullPointerException e) {
-
-                    }
-
-                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                        // Delay
+                    }, 300);
                 }
             });
         }

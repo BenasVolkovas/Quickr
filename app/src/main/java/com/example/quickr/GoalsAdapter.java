@@ -3,6 +3,7 @@ package com.example.quickr;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,20 +30,7 @@ public class GoalsAdapter extends RecyclerView.Adapter<GoalsAdapter.GoalViewHold
         private TextView time;
         private CheckBox checkBox;
 
-//        public String getCurrentDate() {
-//            Calendar calendar = Calendar.getInstance();
-//            String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
-//
-//            List<String> times = Arrays.asList(currentDate.split("/"));
-//
-//            int currentDay = Integer.parseInt(times.get(1));
-//            int currentMonth = Integer.parseInt(times.get(0));
-//            int currentYear = Integer.parseInt(times.get(2)) + 2000;
-//            String date = currentYear + " / " + currentMonth + " / " + currentDay;
-//
-//            return date;
-//        }
-
+        // Constructor
         public GoalViewHolder(View view) {
             super(view);
             this.containerView = view.findViewById(R.id.goal_row);
@@ -68,25 +56,41 @@ public class GoalsAdapter extends RecyclerView.Adapter<GoalsAdapter.GoalViewHold
             // When checkbox is clicked it deletes goal and reloads GoalsActivity
             this.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Goal goal = (Goal) checkBox.getTag();
-                    Context context = buttonView.getContext();
-                    Intent intent = new Intent(buttonView.getContext(), GoalsActivity.class);
-                    GoalsActivity.goalsDatabase.goalDao().delete(goal.id);
 
-                    // If scores DB is empty it creates one column
-                    try {
-                        Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
-                        if (cursor.getCount() == 0) {
-                            MainActivity.scoresDatabase.scoreDao().create();
-                            MainActivity.scoresDatabase.scoreDao().updatePoints(200);
-                        } else {
-                            MainActivity.scoresDatabase.scoreDao().updatePoints(200);
+                    final CompoundButton buttonViewFinal = buttonView;
+
+                    // Creates handler for adding delay
+                    Handler handler = new Handler();
+
+                    // Method with delay
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            // Deletes goal by finding tag
+                            Goal goal = (Goal) checkBox.getTag();
+                            Context context = buttonViewFinal.getContext();
+                            Intent intent = new Intent(buttonViewFinal.getContext(), GoalsActivity.class);
+                            GoalsActivity.goalsDatabase.goalDao().delete(goal.id);
+
+                            // If scores DB is empty it creates one column
+                            try {
+                                Cursor cursor = MainActivity.scoresDatabase.query("SELECT * FROM scores", null);
+                                if (cursor.getCount() == 0) {
+                                    MainActivity.scoresDatabase.scoreDao().create();
+                                    MainActivity.scoresDatabase.scoreDao().updatePoints(200);
+                                } else {
+                                    MainActivity.scoresDatabase.scoreDao().updatePoints(200);
+                                }
+                            } catch (NullPointerException e) {
+
+                            }
+
+                            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+
                         }
-                    } catch (NullPointerException e) {
-
-                    }
-
-                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                        // Dealy
+                    }, 300);
                 }
             });
         }

@@ -10,7 +10,7 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 // HabitsDatabase will have methods/queries created in HabitDao
-@Database(entities = {Habit.class}, version = 3)
+@Database(entities = {Habit.class}, version = 4)
 public abstract class HabitsDatabase extends RoomDatabase {
 
     private static HabitsDatabase INSTANCE;
@@ -22,7 +22,7 @@ public abstract class HabitsDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(), HabitsDatabase.class, "habits")
                     .allowMainThreadQueries()
-                    .addMigrations(migration1_2, migration2_3)
+                    .addMigrations(migration1_2, migration2_3, migration3_4)
                     .build();
         }
         return INSTANCE;
@@ -44,6 +44,13 @@ public abstract class HabitsDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE habits ADD COLUMN checked INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    static final Migration migration3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE habits ADD COLUMN updateTime TEXT");
         }
     };
 }

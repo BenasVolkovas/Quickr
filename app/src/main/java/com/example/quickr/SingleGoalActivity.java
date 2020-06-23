@@ -41,7 +41,7 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
         time = getIntent.getStringExtra("time");
 
         textView.setText(content);
-        timeView.setText("Achieve until\n" + time);
+        timeView.setText("Achieve until:\n" + time);
 
         // Creates button for deleting goals
         FloatingActionButton fabd = findViewById(R.id.delete_goal_button);
@@ -106,20 +106,6 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
         textView.setText(text);
         content = textView.getText().toString();
     }
-
-//    public String getCurrentDate() {
-//        Calendar calendar = Calendar.getInstance();
-//        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
-//
-//        List<String> times = Arrays.asList(currentDate.split("/"));
-//
-//        int currentDay = Integer.parseInt(times.get(1));
-//        int currentMonth = Integer.parseInt(times.get(0));
-//        int currentYear = Integer.parseInt(times.get(2)) + 2000;
-//        String date = currentYear + " / " + currentMonth + " / " + currentDay;
-//
-//        return date;
-//    }
 
     // When activity is closed it saves changed goal
     @Override

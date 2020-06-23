@@ -31,8 +31,9 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         private CheckBox checkBox;
         private TextView streakNum;
         public int id;
-        public int isChecked = 0;
+        public int isChecked;
 
+        // Constructor
         public HabitViewHolder(View view) {
             super(view);
             this.containerView = view.findViewById(R.id.habit_row);
@@ -40,7 +41,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
             this.checkBox = view.findViewById(R.id.habit_checkbox);
             this.streakNum = view.findViewById(R.id.habit_streak);
 
-            // When clicked opens Single Habit Activity
+            // When clicked opens Single Habit Activity and sends extras
             this.containerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -55,6 +56,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
                 }
             });
 
+            // When checkbox is clicked it adds streak
             this.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -64,6 +66,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
                     int streak = HabitsActivity.habitsDatabase.habitDao().getStreak(habit.id);
                     isChecked = HabitsActivity.habitsDatabase.habitDao().getCheckInfo(habit.id);
 
+                    // If it was uncheck, makes it checked and vice versa
                     if (isChecked == 0) {
                         isChecked = 1;
 
@@ -104,21 +107,13 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
     // Creates list for habits
     private List<Habit> habits = new ArrayList<>();
 
-//    public String getCurrentDate() {
-//        Calendar calendar = Calendar.getInstance();
-//        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
-//
-//        List<String> times = Arrays.asList(currentDate.split("/"));
-//
-//        int currentDay = Integer.parseInt(times.get(1));
-//        int currentMonth = Integer.parseInt(times.get(0));
-//        int currentYear = Integer.parseInt(times.get(2)) + 2000;
-//
-//        String date = currentYear + " / " + currentMonth + " / " + currentDay;
-//
-//        System.out.println("111111" + date);
-//        return date;
-//    }
+    // Gets current date
+    public String getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+
+        return currentDate;
+    }
 
     // While view is creating it converts xml to java code
     @NonNull
@@ -145,9 +140,18 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         holder.streakNum.setText(String.valueOf(current.streak));
 
         // On create, if it was checked, makes checked, else unchecked
-        if (HabitsActivity.habitsDatabase.habitDao().getCheckInfo(current.id) == 1) {
-            holder.checkBox.setChecked(true);
+        String currentDate = getCurrentDate();
+        String lastUpdate = HabitsActivity.habitsDatabase.habitDao().getLastupdate(current.id);
+
+        if (currentDate.equals(lastUpdate)) {
+            if (HabitsActivity.habitsDatabase.habitDao().getCheckInfo(current.id) == 1) {
+                holder.checkBox.setChecked(true);
+            } else {
+                holder.checkBox.setChecked(false);
+            }
         } else {
+            HabitsActivity.habitsDatabase.habitDao().updateDate(currentDate, current.id);
+            HabitsActivity.habitsDatabase.habitDao().notChecked(current.id);
             holder.checkBox.setChecked(false);
         }
     }

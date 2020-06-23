@@ -8,7 +8,7 @@ import java.util.List;
 // Multiple sqlite queries for database
 @Dao
 public interface HabitDao {
-    @Query("INSERT INTO habits (content) VALUES ('New habit')")
+    @Query("INSERT INTO habits (content, streak, checked) VALUES ('New habit', 0, 0)")
     void create();
 
     @Query("SELECT * FROM habits")
@@ -34,6 +34,12 @@ public interface HabitDao {
 
     @Query("SELECT checked FROM habits WHERE id = :id")
     int getCheckInfo(int id);
+
+    @Query("SELECT updateTime FROM habits WHERE id = :id")
+    String getLastupdate(int id);
+
+    @Query("UPDATE habits SET updateTime = :date WHERE id = :id")
+    void updateDate(String date, int id);
 
     @Query("DELETE FROM habits WHERE id = :id")
     void delete(int id);

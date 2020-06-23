@@ -4,8 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-// Single Habit has id and content
-// Later it also will have streak
+// Single Habit
 @Entity(tableName = "habits")
 public class Habit {
     @PrimaryKey
@@ -19,4 +18,7 @@ public class Habit {
 
     @ColumnInfo(name = "checked")
     public int checked;
+
+    @ColumnInfo(name = "updateTime")
+    public String updateTime;
 }
