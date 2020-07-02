@@ -50,8 +50,9 @@ public class SingleGoalActivity extends AppCompatActivity implements AddGoalDial
             public void onClick(View view) {
                 GoalsActivity.goalsDatabase.goalDao().delete(id);
 
-                // Returns to previous activity
-                finish();
+                Context context = view.getContext();
+                Intent intent = new Intent(view.getContext(), GoalsActivity.class);
+                context.startActivity(intent);
                 overridePendingTransition(0,0);
             }
         });

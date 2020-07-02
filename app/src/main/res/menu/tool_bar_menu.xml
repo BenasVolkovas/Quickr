@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/score"
+        android:icon="@drawable/ic_action_score"
+        android:iconTint="@color/white"
         android:title="Score"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 </menu>

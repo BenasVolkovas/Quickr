@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.muddzdev.styleabletoast.StyleableToast;
 
 import java.text.DateFormat;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -80,13 +81,13 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
                                 MainActivity.scoresDatabase.scoreDao().updatePoints((streak+1)*100);
                             }
                         } catch (NullPointerException e) {
-
+                            System.out.println(e.toString());
                         }
 
                         // Updates checked, streak info, shows toast
                         HabitsActivity.habitsDatabase.habitDao().isChecked(habit.id);
                         HabitsActivity.habitsDatabase.habitDao().updateStreak(habit.id);
-                        StyleableToast.makeText(v.getContext(), "You got " + (streak+1)*100 +" points", R.style.toast).show();
+                        StyleableToast.makeText(v.getContext(), "+" + (streak+1)*100 +" points", R.style.toast).show();
                     } else if (isChecked == 1) {
                         isChecked = 0;
 
@@ -110,9 +111,47 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
     // Gets current date
     public String getCurrentDate() {
         Calendar calendar = Calendar.getInstance();
-        String currentDate = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+        String dayOfYear = String.valueOf(calendar.get(Calendar.DAY_OF_YEAR));
 
-        return currentDate;
+        return dayOfYear;
+    }
+
+    // Checks if habit was missed
+    public boolean missedHabit(int id) {
+        Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+        int currentYear = calendar.get(Calendar.YEAR);
+        String dayOfYear = getCurrentDate();
+        int lastDay;
+
+        if (HabitsActivity.habitsDatabase.habitDao().getLastupdate(id) == null) {
+            HabitsActivity.habitsDatabase.habitDao().updateDate(dayOfYear, id);
+            lastDay = Integer.parseInt(HabitsActivity.habitsDatabase.habitDao().getLastupdate(id));
+        } else {
+            lastDay = Integer.parseInt(HabitsActivity.habitsDatabase.habitDao().getLastupdate(id));
+        }
+
+        if (currentDay > lastDay) {
+            return currentDay - lastDay > 1;
+        } else if (currentDay < lastDay) {
+            if (currentYear % 4 == 0) {
+                int daysMissed = (366 - lastDay) + currentDay;
+                if (daysMissed > 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                int daysMissed = (365 - lastDay) + currentDay;
+                if (daysMissed > 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
     }
 
     // While view is creating it converts xml to java code
@@ -139,16 +178,24 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         holder.textView.setText(current.content);
         holder.streakNum.setText(String.valueOf(current.streak));
 
-        // On create, if it was checked, makes checked, else unchecked
+        boolean missedHabit = missedHabit(current.id);
         String currentDate = getCurrentDate();
         String lastUpdate = HabitsActivity.habitsDatabase.habitDao().getLastupdate(current.id);
 
+        // On create, if it was checked, makes checked, else unchecked
         if (currentDate.equals(lastUpdate)) {
             if (HabitsActivity.habitsDatabase.habitDao().getCheckInfo(current.id) == 1) {
                 holder.checkBox.setChecked(true);
             } else {
                 holder.checkBox.setChecked(false);
             }
+
+        // If habit was missed it deletes streak
+        } else if (missedHabit == true) {
+            HabitsActivity.habitsDatabase.habitDao().deleteStreak(current.id);
+            HabitsActivity.habitsDatabase.habitDao().notChecked(current.id);
+            holder.checkBox.setChecked(false);
+            holder.streakNum.setText(HabitsActivity.habitsDatabase.habitDao().getStreak(current.id));
         } else {
             HabitsActivity.habitsDatabase.habitDao().updateDate(currentDate, current.id);
             HabitsActivity.habitsDatabase.habitDao().notChecked(current.id);

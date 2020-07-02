@@ -90,7 +90,7 @@ public class GoalsActivity extends AppCompatActivity {
 
     // When checkbox is clicked it shows toast
     public void showToast(View v) {
-        StyleableToast goalToast = StyleableToast.makeText(this, "You got 200 points", R.style.toast);
+        StyleableToast goalToast = StyleableToast.makeText(this, "+200 points", R.style.toast);
         goalToast.show();
     }
 

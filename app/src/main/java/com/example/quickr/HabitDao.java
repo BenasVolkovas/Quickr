@@ -23,6 +23,9 @@ public interface HabitDao {
     @Query("UPDATE habits SET streak = streak-1 WHERE id = :id")
     void removeStreak(int id);
 
+    @Query("UPDATE habits SET streak = 0 WHERE id = :id")
+    void deleteStreak(int id);
+
     @Query("SELECT streak FROM habits WHERE id = :id")
     int getStreak(int id);
 

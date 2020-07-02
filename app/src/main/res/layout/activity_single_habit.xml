@@ -33,7 +33,7 @@
             android:textSize="40sp"
             android:textColor="@color/black"
             android:paddingTop="10sp"
-            android:background="#F0F0F0"/>
+            android:background="#FAFAFA"/>
 
     </LinearLayout>
 
@@ -41,7 +41,7 @@
         android:id="@+id/delete_habit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:layout_margin="16sp"
         android:tint="@color/white"
         app:srcCompat="@drawable/ic_trash_can" />
@@ -50,9 +50,9 @@
         android:id="@+id/save_habit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16sp"
         android:tint="@color/white"
-        app:srcCompat="@drawable/ic_save_text" />
+        app:srcCompat="@drawable/ic_done" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

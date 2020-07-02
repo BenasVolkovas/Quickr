@@ -94,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showToast(View v) {
-        StyleableToast taskToast = StyleableToast.makeText(this, "You got 100 points", R.style.toast);
+        StyleableToast taskToast = StyleableToast.makeText(this, "+100 points", R.style.toast);
         taskToast.show();
     }
 
+    // Creates options menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // When item is clicked it opens Score Activity
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();

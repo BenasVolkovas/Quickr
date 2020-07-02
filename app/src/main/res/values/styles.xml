@@ -14,9 +14,10 @@
     </style>
     
     <style name="toast">
-        <item name="stColorBackground">#5DDE5D</item>
+        <item name="stColorBackground">#14C878</item>
         <item name="stTextColor">#000000</item>
         <item name="stTextSize">20sp</item>
+        <item name="stFont">@font/roboto</item>
         <item name="stIconStart">@drawable/ic_done</item>
         <item name="stStrokeColor">#000000</item>
         <item name="stStrokeWidth">2sp</item>
