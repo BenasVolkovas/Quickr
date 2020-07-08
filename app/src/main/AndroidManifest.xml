@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.quickr">
+    package="com.benasvolkovas.quickr">
 
     <application
         android:allowBackup="true"
@@ -9,16 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScoreActivity"
+        <activity android:name="com.benasvolkovas.quickr.ScoreActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SingleHabitActivity" />
-        <activity android:name=".GoalCalendarActivity"
+        <activity android:name="com.benasvolkovas.quickr.SingleHabitActivity" />
+        <activity android:name="com.benasvolkovas.quickr.GoalCalendarActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SingleGoalActivity" />
-        <activity android:name=".GoalsActivity" />
-        <activity android:name=".HabitsActivity" />
-        <activity android:name=".TaskActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.benasvolkovas.quickr.SingleGoalActivity" />
+        <activity android:name="com.benasvolkovas.quickr.GoalsActivity" />
+        <activity android:name="com.benasvolkovas.quickr.HabitsActivity" />
+        <activity android:name="com.benasvolkovas.quickr.TaskActivity" />
+        <activity android:name="com.benasvolkovas.quickr.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
