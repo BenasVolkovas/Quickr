@@ -188,10 +188,11 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
 
         // If habit was missed it deletes streak
         } else if (missedHabit == true) {
+            HabitsActivity.habitsDatabase.habitDao().updateDate(currentDate, current.id);
             HabitsActivity.habitsDatabase.habitDao().deleteStreak(current.id);
             HabitsActivity.habitsDatabase.habitDao().notChecked(current.id);
             holder.checkBox.setChecked(false);
-            holder.streakNum.setText(HabitsActivity.habitsDatabase.habitDao().getStreak(current.id));
+            holder.streakNum.setText(String.valueOf(HabitsActivity.habitsDatabase.habitDao().getStreak(current.id)));
         } else {
             HabitsActivity.habitsDatabase.habitDao().updateDate(currentDate, current.id);
             HabitsActivity.habitsDatabase.habitDao().notChecked(current.id);
